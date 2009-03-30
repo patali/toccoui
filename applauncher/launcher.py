@@ -140,7 +140,7 @@ class slideShow(MTWidget):
 
 if __name__ == '__main__':
     w = MTWindow(bgcolor=(0,0,0,1.0))
-    sshow = slideShow(filename="slideshow.jpg", pos=(w.width-500,w.height - 600),rotation=45)
+    sshow = slideShow(filename="slideshow.jpg", pos=(w.width-700,w.height - 450),rotation=45)
     w.add_widget(sshow)    
     plane = MTScatterPlane(bgcolor=(1,1,1,1.0),do_rotation=False, do_scale=False, do_translation=['x'], size=(300,300),pos=(0,10))
     w.add_widget(plane)
