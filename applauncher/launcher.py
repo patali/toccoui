@@ -42,11 +42,6 @@ class MTicon(MTButton):
             drawCover(self.texture.id, pos=(self.x,self.y + 50), size=(self.image.width,self.image.height))
         self.parent.do_layout()
 
-
-
-
-        self.parent.do_layout()
-
     def on_touch_down(self, touches, touchID, x, y):
         if self.collide_point(x,y):
             print "Touched"
@@ -133,14 +128,16 @@ class slideShow(MTWidget):
             return
 
     def on_draw(self):
-        self.rotation = int((self.rotation+1)%360)
+        if(self.rotation<=480):
+            self.x -= 1.5
+            self.rotation = self.rotation+4
         self.draw()        
        
 
 
 if __name__ == '__main__':
     w = MTWindow(bgcolor=(0,0,0,1.0))
-    sshow = slideShow(filename="slideshow.jpg", pos=(w.width-700,w.height - 450),rotation=45)
+    sshow = slideShow(filename="slideshow.jpg", pos=(w.width-500,w.height - 600),rotation=45)
     w.add_widget(sshow)    
     plane = MTScatterPlane(bgcolor=(1,1,1,1.0),do_rotation=False, do_scale=False, do_translation=['x'], size=(300,300),pos=(0,10))
     w.add_widget(plane)
