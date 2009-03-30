@@ -82,11 +82,68 @@ def drawCover(texture, pos=(0,0), size=(1.0,1.0)):
         texcoords2 = (0.0,1.0, 1.0,1.0, 1.0,0.0, 0.0,0.0)
         color2 = (0,0,0,0.5, 0,0,0,0.5, 0.5,0.5,0.5,0.5, 0.5,0.5,0.5,0.5 )
         draw(4, GL_QUADS, ('v2f', pos2), ('t2f', texcoords2), ('c4f', color2))
+        
+       
+class slideShow(MTWidget):
+    def __init__(self, **kwargs):
+        kwargs.setdefault('scale', 1.0)
+        kwargs.setdefault('filename', None)
+        if kwargs.get('filename') is None:
+            raise Exception('No filename given to MTicon')
+
+        super(slideShow, self).__init__(**kwargs)
+        self.fname = kwargs.get('filename')
+        img                 = pyglet.image.load(kwargs.get('filename'))
+        self.image          = pyglet.sprite.Sprite(img)
+        self.image.x        = self.x
+        self.image.y        = self.y
+        self.scale          = kwargs.get('scale')
+        self.image.scale    = self.scale
+        self.width,self.height  = (self.image.width, self.image.height)
+        self.texture = img.get_texture()
+        self.rotation = 45        
+
+    def draw(self):
+        global angle
+        self.image.x        = self.x
+        self.image.y        = self.y
+        self.size           = (self.image.width, self.image.height)
+        #
+        with DO(gx_enable(GL_BLEND),gx_enable(GL_TEXTURE_2D)):
+
+            glColor4f(1, 1, 1, 1)
+            glPushMatrix()
+            glTranslatef(self.x,self.y,0)
+            glTranslated(self.image.width/2.0,self.image.height/2.0, 0)
+            glRotatef(self.rotation, 0.0, 1.0, 0.0)
+            glTranslated(-self.image.width/2.0,-self.image.height/2.0, 0)
+            drawCover(self.texture.id, pos=(0,0), size=(self.image.width,self.image.height))
+             glPopMatrix()
+        
+
+    def on_touch_down(self, touches, touchID, x, y):
+        if self.collide_point(x,y):
+            print "Touched"
+            return
+
+    def on_touch_move(self, touches, touchID, x, y):
+        return
+
+    def on_touch_up(self, touches, touchID, x, y):
+        if self.collide_point(x,y):
+            return
+
+    def on_draw(self):
+        self.rotation = int((self.rotation+1)%360)
+        self.draw()        
+       
+
 
 if __name__ == '__main__':
     w = MTWindow(bgcolor=(0,0,0,1.0))
-    
-    plane = MTScatterPlane(color=(0,0,0,1.0),do_rotation=False, do_scale=False, do_translation=['x'], size=(w.width,300),pos=(0,10))
+    sshow = slideShow(filename="slideshow.jpg", pos=(w.width-500,w.height - 600),rotation=45)
+    w.add_widget(sshow)    
+    plane = MTScatterPlane(bgcolor=(1,1,1,1.0),do_rotation=False, do_scale=False, do_translation=['x'], size=(300,300),pos=(0,10))
     w.add_widget(plane)
     layme = MTBoxLayout(padding=10, spacing=10, color=(0,0,0,1.0))
     plane.add_widget(layme)
