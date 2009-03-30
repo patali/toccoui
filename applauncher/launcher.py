@@ -110,7 +110,6 @@ class slideShow(MTWidget):
         self.size           = (self.image.width, self.image.height)
         #
         with DO(gx_enable(GL_BLEND),gx_enable(GL_TEXTURE_2D)):
-
             glColor4f(1, 1, 1, 1)
             glPushMatrix()
             glTranslatef(self.x,self.y,0)
@@ -118,7 +117,7 @@ class slideShow(MTWidget):
             glRotatef(self.rotation, 0.0, 1.0, 0.0)
             glTranslated(-self.image.width/2.0,-self.image.height/2.0, 0)
             drawCover(self.texture.id, pos=(0,0), size=(self.image.width,self.image.height))
-             glPopMatrix()
+            glPopMatrix()
         
 
     def on_touch_down(self, touches, touchID, x, y):
