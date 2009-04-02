@@ -10,14 +10,13 @@ class IconText(MTWidget):
     def __init__(self, **kwargs):
         kwargs.setdefault('size', (200,100))
         super(IconText, self).__init__(**kwargs)
-        self.label = "Application 2"
+        self.label = "Application"
         self.pos = kwargs.get('pos')
         self.opacity = 0
-        self.color = (255,255,255,self.opacity)
         
     def draw(self):
         glColor4f(1,0,0,1)
-        drawLabel(self.label,self.pos,False,self.color)
+        drawLabel(self.label,self.pos,False,(255,255,255,self.opacity))
         
     def printme(self):
         print self.label
@@ -60,7 +59,6 @@ class MTicon(MTButton):
         self.image.x        = self.x
         self.image.y        = self.y       
         self.size           = (self.image.width, self.image.height)
-        #
         with DO(gx_blending, gx_enable(GL_TEXTURE_2D)):
             set_color(1, 1, 1, 1)
             drawCover(self.texture.id, pos=(self.x,self.y + 50), size=(self.image.width,self.image.height))
@@ -88,11 +86,11 @@ class MTicon(MTButton):
             self.iconlabel.label = self.label
             self.iconlabel.show()
             if self.iconlabel.opacity < 100:
-                self.iconlabel.opacity = self.iconlabel.opacity+10
-                print self.iconlabel.opacity
+                self.iconlabel.opacity = self.iconlabel.opacity+5
         else:
             if self.image.scale > 0.5:
                 self.image.scale    = self.image.scale-math.sin(math.pi / 2 * 0.06)
+                self.iconlabel.opacity = 0
             self.width,self.height  = (self.image.width, self.image.height)
             self.iconlabel.hide()
         self.draw()
