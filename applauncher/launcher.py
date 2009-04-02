@@ -6,6 +6,9 @@ from pyglet.graphics import draw
 from pyglet.text import Label
 import math
 
+#
+#This is the class definattion for text which appears over the icon
+#
 class IconText(MTWidget):
     def __init__(self, **kwargs):
         kwargs.setdefault('size', (200,100))
@@ -17,9 +20,9 @@ class IconText(MTWidget):
     def draw(self):
         glColor4f(1,0,0,1)
         drawLabel(self.label,self.pos,False,(255,255,255,self.opacity))
-        
-    def printme(self):
-        print self.label
+
+
+#This is a function which draws the label using pyglet and opengl
 
 def drawLabel(text, pos=(0,0),center=True,textcolor=(255,255,255,75)):
     _standard_label = Label(text='standard Label', font_size=200,bold=True, color=textcolor)
@@ -32,7 +35,12 @@ def drawLabel(text, pos=(0,0),center=True,textcolor=(255,255,255,75)):
     glTranslated(pos[0], pos[1], 0.0)
     glScaled(0.3,0.3,1)
     _standard_label.draw()
-    glPopMatrix()        
+    glPopMatrix()
+
+
+#This is a class defination for the Icon object, the object of these classes maitain
+#its own properties like size, sense whether its at the center of the screen, change
+#the label's opacity, even detected doubletap events    
 
 class MTicon(MTButton):
     def __init__(self, **kwargs):
@@ -55,6 +63,7 @@ class MTicon(MTButton):
         self.iconlabel = IconText(pos=(w.width/2,w.height/2+200))
         w.add_widget(self.iconlabel)    
         self.iconlabel.hide()
+        
     def draw(self):
         self.image.x        = self.x
         self.image.y        = self.y       
@@ -66,8 +75,9 @@ class MTicon(MTButton):
 
     def on_touch_down(self, touches, touchID, x, y):
         if self.collide_point(x,y):
-            print "Touched"
-            print "file: ",self.fname , self.parent.parent.to_parent(self.x,self.y)[0]
+            if touches[touchID].is_double_tap:
+                print "Double Tapped"
+                print "file: ",self.fname , self.parent.parent.to_parent(self.x,self.y)[0]
             return
 
     def on_touch_move(self, touches, touchID, x, y):
@@ -95,12 +105,16 @@ class MTicon(MTButton):
             self.iconlabel.hide()
         self.draw()
 
+#This is a function which draws the Icons along with reflections
+
 def drawCover(texture, pos=(0,0), size=(1.0,1.0)):
     with gx_enable(GL_TEXTURE_2D):
         glBindTexture(GL_TEXTURE_2D,texture)
+        #Draw First Cover
         pos = ( pos[0],pos[1],   pos[0]+size[0],pos[1],   pos[0]+size[0],pos[1]+size[1],  pos[0],pos[1]+size[1] )
         texcoords = (0.0,0.0, 1.0,0.0, 1.0,1.0, 0.0,1.0)
         draw(4, GL_QUADS, ('v2f', pos), ('t2f', texcoords))
+        #Draw Second Cover
         pos2 = ( pos[0],pos[1]-size[1],   pos[0]+size[0],pos[1]-size[1],   pos[0]+size[0],pos[1]+size[1]-size[1],  pos[0],pos[1]+size[1]-size[1] )
         texcoords2 = (0.0,1.0, 1.0,1.0, 1.0,0.0, 0.0,0.0)
         color2 = (0,0,0,0, 0,0,0,0, 0.4,0.4,0.4,0, 0.4,0.4,0.4,0 )
