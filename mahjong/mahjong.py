@@ -20,7 +20,7 @@ class MJEngine(MTWidget):
             self.mjobjs[z] = MJObject(image=file_list[i])
             z+=1            
         random.shuffle(self.mjobjs)
-        self.griddy = MTGridLayout(rows=self.num,cols=3,spacing=5)
+        self.griddy = MTGridLayout(rows=self.num,cols=int(self.num/2),spacing=5)
         self.add_widget(self.griddy)
        
         for i in range(self.num*2):
@@ -47,7 +47,7 @@ class MJObject(MTWidget):
        
 if __name__ == '__main__':
     w = MTWindow()
-    mahjong = MJEngine(num=4)
+    mahjong = MJEngine(num=10)
     w.add_widget(mahjong)
     runTouchApp()
  
