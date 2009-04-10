@@ -79,7 +79,7 @@ class PyzzleEngine(MTWidget):
         self.rows = kwargs.get('rows')
         self.cols = kwargs.get('cols')
         self.player = Player()
-        self.player.volume = 0.0
+        self.player.volume = 0.5
         self.source = pyglet.media.load('super-fly.avi')
         self.sourceDuration = self.source.duration
         self.player.queue(self.source)
