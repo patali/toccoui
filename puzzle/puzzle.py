@@ -12,6 +12,8 @@ from pyglet.gl import *
 import random
 
 
+puzzle_register = {}
+
 #A snappable grid layout which produces a container to hold the snappable objects            
 class MTSnappableGrid(MTGridLayout):
     def __init__(self, **kwargs):
@@ -28,6 +30,7 @@ class MTSnappableWidget(MTWidget):
         super(MTSnappableWidget, self).__init__(**kwargs)       
         self.state = ('normal', None)
         self.grid = kwargs.get('grid')
+        global puzzle_register
         
     def on_touch_down(self, touches, touchID, x, y):
         if self.collide_point(x,y):
@@ -52,12 +55,29 @@ class MTSnappableWidget(MTWidget):
                     (self.center[1]<=int(self.grid.y+self.height+self.height*i)))
                     ):
                         self.center = int(self.grid.x+self.width*j+self.width/2),int(self.grid.y+self.height*i+self.height/2)
-            return True       
+                        if self.center == (self.prob_centerX,self.prob_centerY):
+                            puzzle_register[self.puzz_id] = 1                          
+            self.checkPuzzle_status()                
+            return True
+            
+    def checkPuzzle_status(self):
+        zero_count = 0
+        for i in range(self.grid.rows*self.grid.cols):
+            if puzzle_register[i] == 0 :
+                zero_count+=1
+        if zero_count>0:
+            return
+        else:
+            self.parent.popup.bring_to_front()
+            self.parent.popup.show()
             
 class PyzzleEngine(MTWidget):
-    def __init__(self, max=16, **kwargs):
-        MTWidget.__init__(self, **kwargs)
+    def __init__(self, **kwargs):
+        super(PyzzleEngine, self).__init__(**kwargs)
+        global puzzle_register
         self.pieces  = {}
+        self.rows = kwargs.get('rows')
+        self.cols = kwargs.get('cols')
         self.player = Player()
         self.player.volume = 0.0
         self.source = pyglet.media.load('super-fly.avi')
@@ -67,16 +87,28 @@ class PyzzleEngine(MTWidget):
         self.width = self.player.get_texture().width
         self.height = self.player.get_texture().height
         self.player.play()
-        puzzle_seq = pyglet.image.ImageGrid(self.player.get_texture(),4,3)
+        puzzle_seq = pyglet.image.ImageGrid(self.player.get_texture(),self.rows,self.cols)
         
-        self.griddy = MTSnappableGrid(rows=4,cols=3,spacing=0,block_size=(puzzle_seq[0].width,puzzle_seq[1].height))
+        self.griddy = MTSnappableGrid(rows=self.rows,cols=self.cols,spacing=0,block_size=(puzzle_seq[0].width,puzzle_seq[1].height))
         self.add_widget(self.griddy) 
         
         self.griddy.pos = (int(w.width/2-self.griddy._get_content_width()/2),int(w.height/2-self.griddy._get_content_height()/2))
-        
-        for i in range(self.griddy.rows*self.griddy.cols):
-            self.pieces[i] = PyzzleObject(image=puzzle_seq[i],grid=self.griddy)
-            self.add_widget(self.pieces[i])
+        z = 0
+        for i in range(self.griddy.rows):
+            for j in range(self.griddy.cols):
+                self.pieces[z] = PyzzleObject(image=puzzle_seq[z],grid=self.griddy)
+                self.pieces[z].prob_centerX = int(self.griddy.x+self.pieces[z].width*j+self.pieces[z].width/2)
+                self.pieces[z].prob_centerY = int(self.griddy.y+self.pieces[z].height*i+self.pieces[z].height/2)
+                self.pieces[z].puzz_id = z
+                #print self.pieces[z].puzz_id,"(",i,j,"): ",self.pieces[z].prob_centerX,self.pieces[z].prob_centerY
+                self.add_widget(self.pieces[z])
+                puzzle_register[z]=0                
+                z+=1
+                
+        #On complete display popup
+        self.popup = MTPopup(title="Message",content="Puzzle Completed",size=(300,300))
+        self.add_widget(self.popup)
+        self.popup.hide()
 
 class PyzzleObject(MTSnappableWidget):
     def __init__(self, **kwargs):
@@ -86,6 +118,9 @@ class PyzzleObject(MTSnappableWidget):
         self.y = int(random.uniform(100, 800))
         self.width = self.image.width
         self.height = self.image.height
+        self.prob_centerX = 0
+        self.prob_centerY = 0
+        self.puzz_id = 0
 
     def draw(self):
         glPushMatrix()
@@ -96,7 +131,7 @@ class PyzzleObject(MTSnappableWidget):
 
 if __name__ == '__main__':
     w = MTWindow()
-    pyzzle = PyzzleEngine(max=12)
+    pyzzle = PyzzleEngine(rows=3,cols=3)
     w.add_widget(pyzzle)
     runTouchApp()
  
