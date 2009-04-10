@@ -20,14 +20,13 @@ class MJEngine(MTWidget):
             self.mjobjs[z] = MJObject(image=file_list[i])
             z+=1            
         random.shuffle(self.mjobjs)
-        self.griddy = MTGridLayout(rows=self.num,cols=2,spacing=5)
+        self.griddy = MTGridLayout(rows=self.num,cols=3,spacing=5)
         self.add_widget(self.griddy)
-        
-        #self.griddy.pos = (int(w.width/2-self.griddy._get_content_width()/2),int(w.height/2-self.griddy._get_content_height()/2))
-        
+       
         for i in range(self.num*2):
             self.griddy.add_widget(self.mjobjs[i])
             
+        self.griddy.pos = (int(w.width/2-self.griddy._get_content_width()/2),int(w.height/2-self.griddy._get_content_height()/2))    
             
 class MJObject(MTWidget):
     def __init__(self, **kwargs):
