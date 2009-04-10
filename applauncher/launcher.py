@@ -5,6 +5,7 @@ from pyglet.gl import *
 from pyglet.graphics import draw
 from pyglet.text import Label
 import math
+import subprocess, sys
 
 #
 #This is the class definattion for text which appears over the icon
@@ -78,6 +79,8 @@ class MTicon(MTButton):
             if touches[touchID].is_double_tap:
                 print "Double Tapped"
                 print "file: ",self.fname , self.parent.parent.to_parent(self.x,self.y)[0]
+                proc = subprocess.Popen(['python', 'particles.py'] + sys.argv[1:], cwd='../particle')
+                proc.wait()
             return
 
     def on_touch_move(self, touches, touchID, x, y):
@@ -121,10 +124,12 @@ def drawCover(texture, pos=(0,0), size=(1.0,1.0)):
         draw(4, GL_QUADS, ('v2f', pos2), ('t2f', texcoords2), ('c4f', color2))
 
 if __name__ == '__main__':
-    w = MTWindow(bgcolor=(0,0,0,1.0),fullscreen=False)
+    w = MTWindow(bgcolor=(0,0,0,1.0))
   
     plane = MTScatterPlane(bgcolor=(1,1,1,1.0),do_rotation=False, do_scale=False, do_translation=['x'], size=(1440,300),pos=(-128,w.height/2-150))
-    w.add_widget(plane)
+    kiney = MTKinetic()
+    kiney.add_widget(plane)
+    w.add_widget(kiney)
 
     layme = MTBoxLayout(padding=10, spacing=10, color=(0,0,0,1.0))
     plane.add_widget(layme)

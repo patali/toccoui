@@ -126,11 +126,11 @@ class ParticleShow(MTWidget):
         return True
 
 class SetButton(MTButton):
-    def __init__(self, pos=(0, 0), size=(100, 100), label='Hello',
-            pe=None, **kargs):
+    def __init__(self, pos=(0, 0), size=(100, 100), label='Hello',pe=None, **kargs):
         MTButton.__init__(self, pos=pos, size=size, label=label, **kargs)
         self.label = label
         self.pe = pe
+        self.bgcolor = (0.5,0.5,0.5)
 
     def on_touch_down(self, touches, touchID, x,y):
         if self.collide_point(x,y):
@@ -159,7 +159,7 @@ def pymt_plugin_deactivate(w, ctx):
 
 #start the application (inits and shows all windows)
 if __name__ == '__main__':
-    w = MTWindow(color=(0,0,0,1))
+    w = MTWindow(bgcolor=(0,0,0,1))
     ctx = MTContext()
     pymt_plugin_activate(w, ctx)
     runTouchApp()
