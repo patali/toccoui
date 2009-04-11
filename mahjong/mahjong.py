@@ -4,17 +4,7 @@ from pyglet.media import *
 from pyglet.gl import *
 import random
 import glob
-
-class MTGriddy(MTGridLayout):
-    def __init__(self, **kwargs):
-        super(MTGriddy, self).__init__(**kwargs)
-        self.block_size = kwargs.get('block_size')
-        self.gridHolders = {}
-        for i in range(self.rows*self.cols):
-            self.gridHolders[i] = MTRectangularWidget(size=(self.block_size[0],self.block_size[1]),bgcolor=(0,0,0))
-            self.add_widget(self.gridHolders[i]) 
-
-
+            
 class MJEngine(MTWidget):
     def __init__(self, **kwargs):
         super(MJEngine, self).__init__(**kwargs)
@@ -25,29 +15,24 @@ class MJEngine(MTWidget):
         z = 0
         for i in range(self.num):
             self.mjobjs[z] = MJObject(size=(128,128))
-            self.mjobjs[z].add_widget(MJImage(image=file_list[i]),side="back")           
+            self.mjobjs[z].add_widget(MJImage(image=file_list[i]),side="front")           
             z+=1
             self.mjobjs[z] = MJObject(size=(128,128))
-            self.mjobjs[z].add_widget(MJImage(image=file_list[i]),side="back")
+            self.mjobjs[z].add_widget(MJImage(image=file_list[i]),side="front")
             z+=1            
         random.shuffle(self.mjobjs)
         
-        self.griddy = MTGriddy(rows=5,cols=int(self.num/5),spacing=5,block_size=(128,128))
+        self.griddy = MTGridLayout(rows=6,cols=6,spacing=5)
         self.add_widget(self.griddy)                   
-        self.griddy.pos = (int(w.width/2-self.griddy._get_content_width()/2),int(w.height/2-self.griddy._get_content_height()/2))
-        
+                
         k = 0
-        for i in range(self.griddy.rows):
-            for j in range(self.griddy.cols):
-                self.mjobjs[k].do_translation = True
-                self.mjobjs[k].init_transform((int(self.griddy.x+20+self.mjobjs[k].width*j),int(self.griddy.y+20+self.mjobjs[k].height*i)), 0, 1.0)
-                self.mjobjs[k].do_translation = False
-                self.add_widget(self.mjobjs[k])
-                k+=1             
+        for i in range(self.num*2):
+            self.griddy.add_widget(self.mjobjs[k])
+            k+=1  
+        self.griddy.pos = (int(w.width/2-self.griddy._get_content_width()/2),int(w.height/2-self.griddy._get_content_height()/2))
                 
 
-
-class MJObject(MTScatterWidget):
+class MJObject(MTFlippableWidget):
     def __init__(self, **kwargs):
         kwargs.setdefault('do_scale', False)
         kwargs.setdefault('do_rotation', False)
@@ -77,7 +62,7 @@ class MJImage(MTWidget):
        
 if __name__ == '__main__':
     w = MTWindow(bgcolor=(0,0,0,0))
-    mahjong = MJEngine(num=15)
+    mahjong = MJEngine(num=18)
     w.add_widget(mahjong)
     runTouchApp()
  
