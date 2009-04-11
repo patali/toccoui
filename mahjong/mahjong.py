@@ -15,10 +15,10 @@ class MJEngine(MTWidget):
         z = 0
         for i in range(self.num):
             self.mjobjs[z] = MJObject(size=(128,128))
-            self.mjobjs[z].add_widget(MJImage(image=file_list[i]),side="front")           
+            self.mjobjs[z].add_widget(MJImage(image=file_list[i]),side="back")           
             z+=1
             self.mjobjs[z] = MJObject(size=(128,128))
-            self.mjobjs[z].add_widget(MJImage(image=file_list[i]),side="front")
+            self.mjobjs[z].add_widget(MJImage(image=file_list[i]),side="back")
             z+=1            
         random.shuffle(self.mjobjs)
         
