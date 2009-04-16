@@ -25,10 +25,19 @@ def pymt_plugin_deactivate(w, ctx):
     w.remove_widget(ctx.c)
 """        
 if __name__ == '__main__':
-    w = MTWindow(bgcolor=(0,0,0,1.0))
+    w = MTWindow()
     kin = MTKinetic()
     video3 = MTVideo(video='super-fly.avi',pos=(550,400))
     kin.add_widget(video3)
     w.add_widget(kin)
+    for i in range (8):
+        img_src = 'images/IMG'+str(i)+'.jpg'
+        x = int(random.uniform(100, w.width-100))
+        y = int(random.uniform(100, w.height-100))
+        rot = random.uniform(0, 360)
+        kin = MTKinetic()
+        b = MTScatterImage(filename=img_src, pos=(x,y), size=(320,240), rotation=rot)
+        kin.add_widget(b)
+        w.add_widget(kin)
     runTouchApp()
    
