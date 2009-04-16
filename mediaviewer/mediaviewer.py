@@ -9,7 +9,7 @@ from pymt.ui.widgets.videowidget import *
 import os
 import random
 
-def pymt_plugin_activate(w, ctx):
+"""def pymt_plugin_activate(w, ctx):
     ctx.c = MTKinetic()
     for i in range (10):
         img_src = '../mediaviewer/bilder/testpic'+str(i+1)+'.jpg'
@@ -23,13 +23,10 @@ def pymt_plugin_activate(w, ctx):
 
 def pymt_plugin_deactivate(w, ctx):
     w.remove_widget(ctx.c)
-        
+"""        
 if __name__ == '__main__':
     w = MTWindow(bgcolor=(0,0,0,1.0))
     video3 = MTVideo(video='super-fly.avi',pos=(550,400))
     w.add_widget(video3)
     runTouchApp()
-    ctx = MTContext()
-    pymt_plugin_activate(w, ctx)
-    runTouchApp()
-    pymt_plugin_deactivate(w, ctx)
+   
