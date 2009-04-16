@@ -26,7 +26,9 @@ def pymt_plugin_deactivate(w, ctx):
 """        
 if __name__ == '__main__':
     w = MTWindow(bgcolor=(0,0,0,1.0))
+    kin = MTKinetic()
     video3 = MTVideo(video='super-fly.avi',pos=(550,400))
-    w.add_widget(video3)
+    kin.add_widget(video3)
+    w.add_widget(kin)
     runTouchApp()
    
