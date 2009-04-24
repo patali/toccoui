@@ -4,6 +4,23 @@ from pyglet.media import *
 from pyglet.gl import *
 import random
 import glob
+
+tile1 = -1
+tile2 = -1
+tile_open_count = 0
+
+def check(dt):
+        global tile_open_count, tile1, tile2
+        if tile1.id == tile2.id:
+            tile1.hide()
+            tile2.hide()
+        else:
+            tile1.flip()
+            tile2.flip()
+        tile_open_count=0
+        tile1 = -1
+        tile2 = -1
+        
             
 class MJEngine(MTWidget):
     def __init__(self, **kwargs):
@@ -15,9 +32,11 @@ class MJEngine(MTWidget):
         z = 0
         for i in range(self.num):
             self.mjobjs[z] = MJObject(size=(128,128))
+            self.mjobjs[z].id = i
             self.mjobjs[z].add_widget(MJImage(image=file_list[i]),side="back")           
             z+=1
             self.mjobjs[z] = MJObject(size=(128,128))
+            self.mjobjs[z].id = i
             self.mjobjs[z].add_widget(MJImage(image=file_list[i]),side="back")
             z+=1            
         random.shuffle(self.mjobjs)
@@ -38,11 +57,32 @@ class MJObject(MTFlippableWidget):
         kwargs.setdefault('do_rotation', False)
         kwargs.setdefault('do_translation', False)
         super(MJObject, self).__init__(**kwargs)
+        self.id = 0
+        self.flipped = False
         
     def on_touch_down(self, touches, touchID, x,y):
+        global tile_open_count, tile1, tile2,check
         if self.collide_point(x,y):
-            self.flip()
-            
+            if tile_open_count == 0:
+                self.flip()
+                self.flipped = True
+                tile_open_count+=1
+                tile1 = self                
+            elif tile_open_count == 1:
+                if tile1 == self:
+                    self.flip()
+                    self.flipped = False
+                    tile1 = -1
+                    tile_open_count = 0
+                else:
+                    self.flip()
+                    self.flipped = True
+                    tile_open_count+=1
+                    tile2 = self
+                    pyglet.clock.schedule_once(check, 0.5)
+
+
+                
 class MJImage(MTWidget):
     def __init__(self, **kwargs):
         super(MJImage, self).__init__(**kwargs)
