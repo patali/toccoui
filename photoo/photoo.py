@@ -11,7 +11,7 @@ class ImageScatter(MTScatterWidget):
     def __init__(self, **kwargs):
         # Preserve this way to do
         # Later, we'll give another possibility, like using a loader...
-        kwargs.setdefault('filename', 'test.jpg')
+        kwargs.setdefault('filename', 'photo.jpg')
         if kwargs.get('filename') is None:
             raise Exception('No filename given to MTScatterImage')
         kwargs.setdefault('loader', None)
