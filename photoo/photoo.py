@@ -21,7 +21,7 @@ class ImageScatter(MTScatterWidget):
         self.pim = Image.open(kwargs.get('filename'))
         #pim = pim.filter(ImageFilter.BLUR)
         self.contrast_enh = ImageEnhance.Contrast(self.pim)
-        self.pim = self.contrast_enh.enhance(0.1)
+        self.pim = self.contrast_enh.enhance(1.1)
         self.bdata = self.pim.tostring() 
         self.img = ImageData(self.pim.size[0], self.pim.size[1], 'RGB', self.bdata, pitch=-self.pim.size[0]*3)         
         self.image  = pyglet.sprite.Sprite(self.img)
