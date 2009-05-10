@@ -64,6 +64,10 @@ class MTicon(MTButton):
         self.iconlabel = IconText(pos=(w.width/2,w.height/2+200))
         w.add_widget(self.iconlabel)    
         self.iconlabel.hide()
+        kwargs.setdefault('pr_folder', None)
+        kwargs.setdefault('pr_file', None)
+        self.process_folder = kwargs.get('pr_folder')
+        self.process_file = kwargs.get('pr_file')
         
     def draw(self):
         self.image.x        = self.x
@@ -71,7 +75,7 @@ class MTicon(MTButton):
         self.size           = (self.image.width, self.image.height)
         with DO(gx_blending, gx_enable(GL_TEXTURE_2D)):
             set_color(1, 1, 1, 1)
-            drawCover(self.texture.id, pos=(self.x,self.y + 50), size=(self.image.width,self.image.height))
+            drawCover(self.texture.id, pos=(self.x,self.y + 48), size=(self.image.width,self.image.height))
         self.parent.do_layout()
 
     def on_touch_down(self, touches, touchID, x, y):
@@ -79,7 +83,7 @@ class MTicon(MTButton):
             if touches[touchID].is_double_tap:
                 print "Double Tapped"
                 print "file: ",self.fname , self.parent.parent.to_parent(self.x,self.y)[0]
-                proc = subprocess.Popen(['python', 'particles.py'] + sys.argv[1:], cwd='../particle')
+                proc = subprocess.Popen(['python', self.process_file] + sys.argv[1:], cwd=self.process_folder)
                 proc.wait()
             return
 
@@ -134,15 +138,11 @@ if __name__ == '__main__':
     layme = MTBoxLayout(padding=10, spacing=10, color=(0,0,0,1.0))
     plane.add_widget(layme)
     
-    layme.add_widget(MTicon(filename = "bloop.png",scale=0.5,label="Bloop"))
-    layme.add_widget(MTicon(filename = "particle.png",scale=0.5,label="Particle"))
-    layme.add_widget(MTicon(filename = "mediaviewer.png",scale=0.5,label="Media Viewer"))
-    layme.add_widget(MTicon(filename = "photomanip.png",scale=0.5,label="Photo Manipulator"))
-    layme.add_widget(MTicon(filename = "mahjong.png",scale=0.5,label="Mahjong"))
-    layme.add_widget(MTicon(filename = "puzzle.png",scale=0.5,label="Jigsaw Puzzle"))
-    #layme.add_widget(MTicon(filename = "maps.png",scale=0.5,label="Maps"))
-    #layme.add_widget(MTicon(filename = "notes.png",scale=0.5,label="Notes"))
-    #layme.add_widget(MTicon(filename = "phone.png",scale=0.5,label="Phone"))
-    #layme.add_widget(MTicon(filename = "weather.png",scale=0.5,label="Weather"))
+    layme.add_widget(MTicon(filename = "bloop.png",scale=0.5,label="Bloop",pr_folder="../bloop",pr_file="bloop.py"))
+    layme.add_widget(MTicon(filename = "particle.png",scale=0.5,label="Particle",pr_folder="../particle",pr_file="particles.py"))
+    layme.add_widget(MTicon(filename = "mediaviewer.png",scale=0.5,label="Media Viewer",pr_folder="../mediaviewer",pr_file="mediaviewer.py"))
+    layme.add_widget(MTicon(filename = "photomanip.png",scale=0.5,label="Photo Manipulator",pr_folder="../photoo",pr_file="photoo.py"))
+    layme.add_widget(MTicon(filename = "mahjong.png",scale=0.5,label="Mahjong",pr_folder="../mahjong",pr_file="mahjong.py"))
+    layme.add_widget(MTicon(filename = "puzzle.png",scale=0.5,label="Jigsaw Puzzle",pr_folder="../puzzle",pr_file="puzzle.py"))
     
     runTouchApp()
