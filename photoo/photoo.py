@@ -14,6 +14,8 @@ class ImageScatter(MTScatterWidget):
 
         super(ImageScatter, self).__init__(**kwargs)
         
+        self.touch_positions = {}
+        
         self.pim = Image.open(kwargs.get('filename'))
         self.contrast_enh = ImageEnhance.Contrast(self.pim)
         self.pim = self.contrast_enh.enhance(1.0)
@@ -33,11 +35,32 @@ class ImageScatter(MTScatterWidget):
         self.width = self.pim.size[0]
         self.height = self.pim.size[1]
         
+        
+        """self.fbo = Fbo(size=(self.width, self.height), with_depthbuffer=False)
+        self.color = (0,1,0,1.0)
+        set_brush('brushes/brush_particle.png')
+        self.clears()        
+        
+    def clears(self):
+        self.fbo.bind()
+        glClearColor(0.75,0.2,0,1)
+        glClear(GL_COLOR_BUFFER_BIT)
+        glClearColor(1,1,1,1)
+        #self.img.blit(0,0)
+        self.fbo.release()"""
+
+        
     def on_touch_down(self, touches, touchID, x, y):
         global workimage
         if self.collide_point(x,y):
             if touches[touchID].is_double_tap:
                 workimage = self
+            #self.touch_positions[touchID] = (x,y)
+            #self.fbo.bind()
+            #glColor4f(0,1,0,1)
+            #paintLine((x,y,x,y))
+            #glColor4f(1,1,1,1)
+            #self.fbo.release()
             super(ImageScatter, self).on_touch_down(touches, touchID, x, y)
             return True
 
@@ -46,7 +69,10 @@ class ImageScatter(MTScatterWidget):
             glColor4f(1,1,1,1)
             drawRectangle((-6,-6),(self.width+12,self.height+12))
             glScaled(float(self.width)/self.image.width, float(self.height)/self.image.height, 2.0)
-            self.image.draw()
+            set_color(1,1,1,1)
+            drawTexturedRectangle(self.img.texture, size=(self.width, self.height))
+            
+
             
     def changeContrast(self,value):
         self.pim = self.contrast_enh.enhance(value)
@@ -159,7 +185,7 @@ if __name__ == '__main__':
     
     #setup filter icon and the menu system
     filterBut = MTImageButton(filename="icons/filters.jpg")
-    filterBut.x,filterBut.y = int(w.width/2),0
+    filterBut.x,filterBut.y = int(w.width/2-filterBut.width/2),0
     w.add_widget(filterBut)
     
     menuholder = MTRectangularWidget(bgcolor=(0,0,0))
