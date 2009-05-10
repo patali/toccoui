@@ -69,8 +69,7 @@ class ImageScatter(MTScatterWidget):
             glColor4f(1,1,1,1)
             drawRectangle((-6,-6),(self.width+12,self.height+12))
             glScaled(float(self.width)/self.image.width, float(self.height)/self.image.height, 2.0)
-            set_color(1,1,1,1)
-            drawTexturedRectangle(self.img.texture, size=(self.width, self.height))
+            self.image.draw()
             
 
             
