@@ -81,10 +81,10 @@ class MTicon(MTButton):
     def on_touch_down(self, touches, touchID, x, y):
         if self.collide_point(x,y):
             if touches[touchID].is_double_tap:
-                print "Double Tapped"
-                print "file: ",self.fname , self.parent.parent.to_parent(self.x,self.y)[0]
+                stopTuio()
                 proc = subprocess.Popen(['python', self.process_file] + sys.argv[1:], cwd=self.process_folder)
                 proc.wait()
+                startTuio()
             return
 
     def on_touch_move(self, touches, touchID, x, y):

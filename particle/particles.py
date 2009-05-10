@@ -4,11 +4,6 @@ import pyglet
 from pyglet.gl import *
 import random
 
-# PYMT Plugin integration
-IS_PYMT_PLUGIN = True
-PLUGIN_TITLE = 'Particles'
-PLUGIN_AUTHOR = 'Sharath Patali & Mathieu Virbel'
-PLUGIN_DESCRIPTION = 'All stars are coming under touches!'
 
 class ParticleObject(MTWidget):
     def __init__(self, pos=(0,0), size=(20,20), color=(1,1,1),
@@ -160,7 +155,21 @@ def pymt_plugin_deactivate(w, ctx):
 #start the application (inits and shows all windows)
 if __name__ == '__main__':
     w = MTWindow(bgcolor=(0,0,0,1))
-    ctx = MTContext()
-    pymt_plugin_activate(w, ctx)
+    ctxpe = ParticleEngine()
+    w.add_widget(ctxpe)
+    back = ParticleShow(pe=ctxpe)
+    w.add_widget(back)
+    but1 = SetButton(pos=(20,40),size=(80,50),label='Squares', pe=ctxpe)
+    w.add_widget(but1)
+    but2 = SetButton(pos=(20,100),size=(80,50),label='Circles', pe=ctxpe)
+    w.add_widget(but2)
+        
+    exitbut = MTImageButton(filename="exit.png")
+    exitbut.x = int(w.width-exitbut.width)
+    exitbut.y = int(w.height-exitbut.height)    
+    w.add_widget(exitbut)
+    @exitbut.event    
+    def on_press(touchID, x, y):
+        sys.exit()    
+
     runTouchApp()
-    pymt_plugin_deactivate(w, ctx)

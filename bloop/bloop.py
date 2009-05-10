@@ -1,17 +1,11 @@
 from __future__ import with_statement
 
-# PYMT Plugin integration
-IS_PYMT_PLUGIN = True
-PLUGIN_TITLE = 'Blop The Game'
-PLUGIN_AUTHOR = 'Sharath Patali'
-PLUGIN_EMAIL = 'sharath.patali@gmail.com'
-PLUGIN_DESCRIPTION = 'This is a music game inspired by Bloom App.'
-
 from pymt import *
 from pyglet.media import *
 from pyglet.gl import *
 from pyglet.text import Label
 import random
+
 
 pyglet.resource.path=['music']
 pyglet.resource.reindex()
@@ -145,18 +139,17 @@ def drawLabel(text, pos=(0,0),center=True):
     glScaled(0.3,0.3,1)
     _standard_label.draw()
     glPopMatrix()
-    
-def pymt_plugin_activate(root, ctx):
-    ctx.PA = PlayArea()
-    root.add_widget(ctx.PA)
-    
 
-def pymt_plugin_deactivate(root, ctx):
-   root.remove_widget(ctx.PA)
-    
 if __name__ == '__main__':
     w = MTWindow(color=(0,0,0,1))
-    ctx = MTContext()
-    pymt_plugin_activate(w, ctx)
+    PA = PlayArea()
+    w.add_widget(PA)
+    exitbut = MTImageButton(filename="exit.png")
+    exitbut.x = int(w.width-exitbut.width)
+    exitbut.y = int(w.height-exitbut.height)    
+    w.add_widget(exitbut)
+    @exitbut.event    
+    def on_press(touchID, x, y):
+        sys.exit()
     runTouchApp()
-    pymt_plugin_deactivate(w, ctx)
+

@@ -209,6 +209,14 @@ if __name__ == '__main__':
     @filterBut.event    
     def on_release(touchID, x, y):
         menuholder.hide()
+        
+    exitbut = MTImageButton(filename="exit.png")
+    exitbut.x = int(w.width-exitbut.width)
+    exitbut.y = int(w.height-exitbut.height)    
+    w.add_widget(exitbut)
+    @exitbut.event    
+    def on_press(touchID, x, y):
+        sys.exit()    
     
     
 

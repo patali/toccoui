@@ -104,5 +104,13 @@ if __name__ == '__main__':
     w = MTWindow(bgcolor=(0,0,0,0))
     mahjong = MJEngine(num=18)
     w.add_widget(mahjong)
+    
+    exitbut = MTImageButton(filename="exit.png")
+    exitbut.x = int(w.width-exitbut.width)
+    exitbut.y = int(w.height-exitbut.height)    
+    w.add_widget(exitbut)
+    @exitbut.event    
+    def on_press(touchID, x, y):
+        sys.exit()
     runTouchApp()
  

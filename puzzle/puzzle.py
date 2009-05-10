@@ -133,5 +133,13 @@ if __name__ == '__main__':
     w = MTWindow()
     pyzzle = PyzzleEngine(rows=3,cols=3)
     w.add_widget(pyzzle)
+    
+    exitbut = MTImageButton(filename="exit.png")
+    exitbut.x = int(w.width-exitbut.width)
+    exitbut.y = int(w.height-exitbut.height)    
+    w.add_widget(exitbut)
+    @exitbut.event    
+    def on_press(touchID, x, y):
+        sys.exit()    
     runTouchApp()
  
