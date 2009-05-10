@@ -1,9 +1,9 @@
 from pymt import *
 from pyglet.gl import *
 from PIL import Image 
-from pyglet.image import ImageData 
+from pyglet.image import ImageData
 import ImageEnhance
-        
+       
         
 class ImageScatter(MTScatterWidget):
     def __init__(self, **kwargs):
@@ -32,9 +32,19 @@ class ImageScatter(MTScatterWidget):
         self.image  = pyglet.sprite.Sprite(self.img)
         self.width = self.pim.size[0]
         self.height = self.pim.size[1]
+        
+    def on_touch_down(self, touches, touchID, x, y):
+        global workimage
+        if self.collide_point(x,y):
+            if touches[touchID].is_double_tap:
+                workimage = self
+            super(ImageScatter, self).on_touch_down(touches, touchID, x, y)
+            return True
 
     def draw(self):
         with gx_matrix:
+            glColor4f(1,1,1,1)
+            drawRectangle((-6,-6),(self.width+12,self.height+12))
             glScaled(float(self.width)/self.image.width, float(self.height)/self.image.height, 2.0)
             self.image.draw()
             
@@ -62,6 +72,7 @@ class ImageScatter(MTScatterWidget):
         self.img = ImageData(self.pim.size[0], self.pim.size[1], 'RGB', self.bdata, pitch=-self.pim.size[0]*3)         
         self.image  = pyglet.sprite.Sprite(self.img)
 
+workimage = ImageScatter()        
             
 class contrastSlider(MTSlider):
     def __init__(self, **kwargs):
@@ -70,10 +81,10 @@ class contrastSlider(MTSlider):
         kwargs.setdefault('value', 1.0)
         super(contrastSlider, self).__init__(**kwargs)
         kwargs.setdefault('imageObj', None)
-        self.imageObj = kwargs.get('imageObj')
         
     def on_value_change(self,value):
-        self.imageObj.changeContrast(value)
+        global workimage
+        workimage.changeContrast(value)
         
 class brightnessSlider(MTSlider):
     def __init__(self, **kwargs):
@@ -82,10 +93,10 @@ class brightnessSlider(MTSlider):
         kwargs.setdefault('value', 1.0)
         super(brightnessSlider, self).__init__(**kwargs)
         kwargs.setdefault('imageObj', None)
-        self.imageObj = kwargs.get('imageObj')
         
     def on_value_change(self,value):
-        self.imageObj.changeBrightness(value)
+        global workimage
+        workimage.changeBrightness(value)
         
 class colorizeSlider(MTSlider):
     def __init__(self, **kwargs):
@@ -94,10 +105,10 @@ class colorizeSlider(MTSlider):
         kwargs.setdefault('value', 1.0)
         super(colorizeSlider, self).__init__(**kwargs)
         kwargs.setdefault('imageObj', None)
-        self.imageObj = kwargs.get('imageObj')
         
     def on_value_change(self,value):
-        self.imageObj.changeColorize(value)
+        global workimage
+        workimage.changeColorize(value)
 
 class sharpnessSlider(MTSlider):
     def __init__(self, **kwargs):
@@ -106,44 +117,47 @@ class sharpnessSlider(MTSlider):
         kwargs.setdefault('value', 1.0)
         super(sharpnessSlider, self).__init__(**kwargs)
         kwargs.setdefault('imageObj', None)
-        self.imageObj = kwargs.get('imageObj')
         
     def on_value_change(self,value):
-        self.imageObj.changeSharpness(value)        
+        global workimage
+        workimage.changeSharpness(value)        
 
-
- 
 if __name__ == '__main__':
     w = MTWindow()
     
-    IS = ImageScatter()
-    w.add_widget(IS)
+    #add the images
+    image = ImageScatter()
+    w.add_widget(image)
+    image = ImageScatter(filename="photo2.jpg")
+    w.add_widget(image)
+    image = ImageScatter(filename="photo3.jpg")
+    w.add_widget(image)
+    workimage = image
     
+    #setup layoyut for the filter sliders and labels
     cplayout = MTGridLayout(rows=4,cols=2,spacing=5)
-    
-
     
     ctlbl = MTFormLabel(label="Contrast")
     cplayout.add_widget(ctlbl)
-    sl = contrastSlider(imageObj=IS,orientation="horizontal")
+    sl = contrastSlider(orientation="horizontal")
     cplayout.add_widget(sl)
     
     ctlb2 = MTFormLabel(label="Brightness")
     cplayout.add_widget(ctlb2)
-    s2 = brightnessSlider(imageObj=IS,orientation="horizontal")
+    s2 = brightnessSlider(orientation="horizontal")
     cplayout.add_widget(s2)
     
     ctlb3 = MTFormLabel(label="Colorize")
     cplayout.add_widget(ctlb3)
-    s3 = colorizeSlider(imageObj=IS,orientation="horizontal")
+    s3 = colorizeSlider(orientation="horizontal")
     cplayout.add_widget(s3)
     
     ctlb4 = MTFormLabel(label="Sharpness")
     cplayout.add_widget(ctlb4)
-    s4 = sharpnessSlider(imageObj=IS,orientation="horizontal")
+    s4 = sharpnessSlider(orientation="horizontal")
     cplayout.add_widget(s4)
     
-
+    #setup filter icon and the menu system
     filterBut = MTImageButton(filename="icons/filters.jpg")
     filterBut.x,filterBut.y = int(w.width/2),0
     w.add_widget(filterBut)
