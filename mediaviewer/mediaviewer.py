@@ -1,32 +1,43 @@
 from __future__ import with_statement
 
+# PYMT Plugin integration
+IS_PYMT_PLUGIN = True
+PLUGIN_TITLE = 'Media Viewer'
+PLUGIN_AUTHOR = 'Team'
+PLUGIN_ICON = '../mediaviewer/mediaviewer.png'
 
 from pymt import *
 from pyglet.media import *
 from pymt.ui.widgets.videowidget import *
 import random
 
+
+class Collection(MTWidget):
+    def __init__(self, **kwargs):
+        super(Collection, self).__init__(**kwargs)
+        self.win = kwargs.get('win')
+        video = MTVideo(video='../mediaviewer/super-fly.avi',pos=(450,400))
+        self.add_widget(video)
+        for i in range (5):
+            img_src = '../mediaviewer/images/IMG'+str(i)+'.jpg'
+            x = int(random.uniform(100, self.win.width-100))
+            y = int(random.uniform(100, self.win.height-100))
+            rot = random.uniform(0, 360)
+            b = MTScatterImage(filename=img_src, pos=(x,y), size=(320,240), rotation=rot)
+            self.add_widget(b)
+
+def pymt_plugin_activate(w, ctx):
+    ctx.col = Collection(win=w)
+    w.add_widget(ctx.col)
+
+def pymt_plugin_deactivate(w, ctx):
+    w.remove_widget(ctx.col)
+
+
+#start the application (inits and shows all windows)
 if __name__ == '__main__':
-    w = MTWindow()
-    kin = MTKinetic()
-    video3 = MTVideo(video='super-fly.avi',pos=(450,400))
-    kin.add_widget(video3)
-    w.add_widget(kin)
-    for i in range (5):
-        img_src = 'images/IMG'+str(i)+'.jpg'
-        x = int(random.uniform(100, w.width-100))
-        y = int(random.uniform(100, w.height-100))
-        rot = random.uniform(0, 360)
-        kin = MTKinetic()
-        b = MTScatterImage(filename=img_src, pos=(x,y), size=(320,240), rotation=rot)
-        kin.add_widget(b)
-        w.add_widget(kin)
-        
-    exitbut = MTImageButton(filename="exit.png")
-    exitbut.x = int(w.width-exitbut.width)
-    exitbut.y = int(w.height-exitbut.height)    
-    w.add_widget(exitbut)
-    @exitbut.event    
-    def on_press(touchID, x, y):
-        sys.exit()
-    runTouchApp()        
+    w = MTWindow(color=(0,0,0,1))
+    ctx = MTContext()
+    pymt_plugin_activate(w, ctx)
+    runTouchApp()
+    pymt_plugin_deactivate(w, ctx)      
