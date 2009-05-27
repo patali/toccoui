@@ -36,9 +36,10 @@ class MJEngine(MTWidget):
         super(MJEngine, self).__init__(**kwargs)
         self.mjobjs  = {} #list which holds the mahjong objects        
         self.num = kwargs.get('num')
-        file_list = glob.glob('icons/*.png')
+        file_list = glob.glob('../mahjong/icons/*.png')
         random.shuffle(file_list)
         z = 0
+        self.win = kwargs.get('win')
         for i in range(self.num):
             self.mjobjs[z] = MJObject(size=(128,128))
             self.mjobjs[z].id = i
@@ -57,7 +58,8 @@ class MJEngine(MTWidget):
         for i in range(self.num*2):
             self.griddy.add_widget(self.mjobjs[k])
             k+=1  
-        self.griddy.pos = (int(w.width/2-self.griddy._get_content_width()/2),int(w.height/2-self.griddy._get_content_height()/2))
+        self.griddy.pos = (int(self.win.width/2),int(50))
+        #self.griddy.pos = (int(self.win.width/2-self.griddy._get_content_width()/2),int(self.win.height/2-self.griddy._get_content_height()/2))
                 
 
 class MJObject(MTFlippableWidget):
@@ -109,7 +111,7 @@ class MJImage(MTWidget):
             self.image.draw()
 
 def pymt_plugin_activate(root, ctx):
-    ctx.mahjong = MJEngine(num=18)
+    ctx.mahjong = MJEngine(num=18,win = root)
     root.add_widget(ctx.mahjong)
 
 def pymt_plugin_deactivate(root, ctx):
