@@ -20,10 +20,11 @@ def action_close_all(menu, w, args):
     
 def action_launch_plugin(menu, w, args):
     name, plugin = args
-    win = MTInnerWindow(size=(320,280), pos=w.pos)
+    win = MTInnerWindow(size=(640,480), pos=w.pos)
     plugins.activate(plugin, win)
     menu.parent.add_widget(win)
-    action_close_menu(menu, w, None)
+    win.fullscreen()
+    #action_close_menu(menu, w, None)
 
 #
 #This is the class definattion for text which appears over the icon
