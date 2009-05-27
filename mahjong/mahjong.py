@@ -1,3 +1,11 @@
+from __future__ import with_statement
+
+# PYMT Plugin integration
+IS_PYMT_PLUGIN = True
+PLUGIN_TITLE = 'Mahjong Game'
+PLUGIN_AUTHOR = 'Team'
+
+
 from pymt import *
 from pyglet import *
 from pyglet.media import *
@@ -99,8 +107,21 @@ class MJImage(MTWidget):
             glColor4f(1,1,1,1)
             self.image.draw()
 
-       
+def pymt_plugin_activate(root, ctx):
+    ctx.mahjong = MJEngine(num=18)
+    root.add_widget(ctx.mahjong)
+
+def pymt_plugin_deactivate(root, ctx):
+    root.remove_widget(ctx.mahjong)		
+
 if __name__ == '__main__':
+    w = MTWindow()
+    ctx = MTContext()
+    pymt_plugin_activate(w, ctx)
+    runTouchApp()
+    pymt_plugin_deactivate(w, ctx)	
+       
+"""if __name__ == '__main__':
     w = MTWindow(bgcolor=(0,0,0,0))
     mahjong = MJEngine(num=18)
     w.add_widget(mahjong)
@@ -114,3 +135,4 @@ if __name__ == '__main__':
         sys.exit()
     runTouchApp()
  
+"""

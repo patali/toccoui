@@ -1,5 +1,11 @@
 from __future__ import with_statement
 
+# PYMT Plugin integration
+IS_PYMT_PLUGIN = True
+PLUGIN_TITLE = 'Bloop The Game'
+PLUGIN_AUTHOR = 'Team'
+
+
 from pymt import *
 from pyglet.media import *
 from pyglet.gl import *
@@ -140,7 +146,23 @@ def drawLabel(text, pos=(0,0),center=True):
     _standard_label.draw()
     glPopMatrix()
 
+
+
+def pymt_plugin_activate(root, ctx):
+    ctx.PA = PlayArea()
+    root.add_widget(ctx.PA)
+
+def pymt_plugin_deactivate(root, ctx):
+    root.remove_widget(ctx.PA)	
+	
 if __name__ == '__main__':
+    w = MTWindow()
+    ctx = MTContext()
+    pymt_plugin_activate(w, ctx)
+    runTouchApp()
+    pymt_plugin_deactivate(w, ctx)
+	
+"""if __name__ == '__main__':
     w = MTWindow(color=(0,0,0,1))
     PA = PlayArea()
     w.add_widget(PA)
@@ -151,5 +173,5 @@ if __name__ == '__main__':
     @exitbut.event    
     def on_press(touchID, x, y):
         sys.exit()
-    runTouchApp()
+    runTouchApp()"""
 

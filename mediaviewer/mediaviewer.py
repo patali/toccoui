@@ -1,3 +1,5 @@
+from __future__ import with_statement
+
 
 from pymt import *
 from pyglet.media import *
