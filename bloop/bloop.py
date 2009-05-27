@@ -6,7 +6,6 @@ PLUGIN_TITLE = 'Bloop The Game'
 PLUGIN_AUTHOR = 'Team'
 PLUGIN_ICON = '../bloop/bloop.png'
 
-
 from pymt import *
 from pyglet.media import *
 from pyglet.gl import *
@@ -14,9 +13,8 @@ from pyglet.text import Label
 import random
 
 
-pyglet.resource.path=['music']
+pyglet.resource.path=['../bloop/music']
 pyglet.resource.reindex()
-
 
 class PlayArea(MTWidget):
     ''' This is a widget which spawns new bloops and also maintains and displays the scorezone widget  '''
@@ -34,8 +32,8 @@ class PlayArea(MTWidget):
         self.redpt = random.uniform(0, 1)
         self.greenpt = random.uniform(0, 1)
         self.bluept = random.uniform(0, 1)
-        self.x = int(random.uniform(100, w.width-100))
-        self.y = int(random.uniform(100, w.height-100))
+        self.x = int(random.uniform(100, self.get_parent_window().width-100))
+        self.y = int(random.uniform(100, self.get_parent_window().height-100))
         self.b = bloop(music_file=random.choice('ABCDEFG')+str(random.randint(1, 3))+".mp3",score_text=self.score,pos=(self.x,self.y),color=(self.redpt,self.greenpt,self.bluept,1))
         self.add_widget(self.b)
 
@@ -54,7 +52,7 @@ class bloop(MTButton):
         kwargs.setdefault('score_text', None)
         self.color = kwargs.get('color')
         self.music_file = kwargs.get('music_file')
-        self.music = pyglet.resource.media(self.music_file, streaming=False)
+        self.music = pyglet.resource.media(self.music_file, streaming=True)
         self.radius = int(self.width/2)
         self.alpha = 0.00
         self.red = self.color[0]
@@ -128,7 +126,7 @@ class ScoreZone(MTWidget):
         
     def draw(self):
         glColor4f(1,0,0,1)
-        drawLabel(self.label,(0,w.height-80),False)    
+        drawLabel(self.label,(0,self.get_parent_window().height-80),False)    
 
     def drawScore(self,dt):
         self.label = self.parent.show_bloop_points()+"/"+self.parent.show_num_bloops()
