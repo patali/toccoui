@@ -4,6 +4,7 @@ from __future__ import with_statement
 IS_PYMT_PLUGIN = True
 PLUGIN_TITLE = 'Bloop The Game'
 PLUGIN_AUTHOR = 'Team'
+PLUGIN_ICON = '../bloop/bloop.png'
 
 
 from pymt import *
@@ -161,17 +162,3 @@ if __name__ == '__main__':
     pymt_plugin_activate(w, ctx)
     runTouchApp()
     pymt_plugin_deactivate(w, ctx)
-	
-"""if __name__ == '__main__':
-    w = MTWindow(color=(0,0,0,1))
-    PA = PlayArea()
-    w.add_widget(PA)
-    exitbut = MTImageButton(filename="exit.png")
-    exitbut.x = int(w.width-exitbut.width)
-    exitbut.y = int(w.height-exitbut.height)    
-    w.add_widget(exitbut)
-    @exitbut.event    
-    def on_press(touchID, x, y):
-        sys.exit()
-    runTouchApp()"""
-

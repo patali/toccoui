@@ -1,5 +1,5 @@
 # PYMT Plugin integration
-IS_PYMT_PLUGIN = True
+IS_PYMT_PLUGIN = False
 PLUGIN_TITLE = 'Pyzzle a multitouch video puzzle'
 PLUGIN_AUTHOR = 'Sharath Patali'
 PLUGIN_EMAIL = 'sharath.patali@gmail.com'
