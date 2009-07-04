@@ -147,9 +147,9 @@ def pymt_plugin_activate(w, ctx):
     w.add_widget(ctx.pe)
     ctx.back = ParticleShow(pe=ctx.pe)
     w.add_widget(ctx.back)
-    ctx.but1 = SetButton(pos=(20,40),size=(80,50),label='Squares', pe=ctx.pe)
+    ctx.but1 = SetButton(pos=(100,100),size=(80,50),label='Squares', pe=ctx.pe)
     w.add_widget(ctx.but1)
-    ctx.but2 = SetButton(pos=(20,100),size=(80,50),label='Circles', pe=ctx.pe)
+    ctx.but2 = SetButton(pos=(100,200),size=(80,50),label='Circles', pe=ctx.pe)
     w.add_widget(ctx.but2)
 
 def pymt_plugin_deactivate(w, ctx):

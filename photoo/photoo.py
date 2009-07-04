@@ -3,11 +3,18 @@ from pyglet.gl import *
 from PIL import Image 
 from pyglet.image import ImageData
 import ImageEnhance
+
+
+# PYMT Plugin integration
+IS_PYMT_PLUGIN = True
+PLUGIN_TITLE = 'Photoo'
+PLUGIN_AUTHOR = 'Team'
+PLUGIN_ICON = '../photoo/photoo.png'
        
         
 class ImageScatter(MTScatterWidget):
     def __init__(self, **kwargs):
-        kwargs.setdefault('filename', 'photo.jpg')
+        kwargs.setdefault('filename', '../photoo/photo.jpg')
         if kwargs.get('filename') is None:
             raise Exception('No filename given to MTScatterImage')
         kwargs.setdefault('loader', None)
@@ -145,9 +152,92 @@ class sharpnessSlider(MTSlider):
         
     def on_value_change(self,value):
         global workimage
-        workimage.changeSharpness(value)        
+        workimage.changeSharpness(value)
 
+
+
+def pymt_plugin_activate(w, ctx):
+    #add the images
+    global workimage
+    ctx.image = ImageScatter()
+    w.add_widget(ctx.image)
+    ctx.image = ImageScatter(filename="../photoo/photo2.jpg")
+    w.add_widget( ctx.image)
+    ctx.image = ImageScatter(filename="../photoo/photo3.jpg")
+    w.add_widget(ctx.image)
+    workimage =  ctx.image
+
+    #setup layoyut for the filter sliders and labels
+    ctx.cplayout = MTGridLayout(rows=4,cols=2,spacing=5)
+    
+    ctx.ctlbl = MTFormLabel(label="Contrast")
+    ctx.cplayout.add_widget(ctx.ctlbl)
+    ctx.sl = contrastSlider(orientation="horizontal")
+    ctx.cplayout.add_widget(ctx.sl)
+    
+    ctx.ctlb2 = MTFormLabel(label="Brightness")
+    ctx.cplayout.add_widget(ctx.ctlb2)
+    ctx.s2 = brightnessSlider(orientation="horizontal")
+    ctx.cplayout.add_widget(ctx.s2)
+    
+    ctx.ctlb3 = MTFormLabel(label="Colorize")
+    ctx.cplayout.add_widget(ctx.ctlb3)
+    ctx.s3 = colorizeSlider(orientation="horizontal")
+    ctx.cplayout.add_widget(ctx.s3)
+    
+    ctx.ctlb4 = MTFormLabel(label="Sharpness")
+    ctx.cplayout.add_widget(ctx.ctlb4)
+    ctx.s4 = sharpnessSlider(orientation="horizontal")
+    ctx.cplayout.add_widget(ctx.s4)
+
+    #setup filter icon and the menu system
+    ctx.filterBut = MTImageButton(filename="../photoo/icons/filters.jpg")
+    ctx.filterBut.x,ctx.filterBut.y = int(w.width/2-ctx.filterBut.width/2),0
+    #w.add_widget(ctx.filterBut)
+    
+    ctx.menuholder = MTRectangularWidget(bgcolor=(0,0,0))
+    ctx.menuholder.width = ctx.cplayout._get_content_width()
+    ctx.menuholder.height = ctx.cplayout._get_content_height()
+    ctx.menuholder.x=ctx.filterBut.x-int(ctx.menuholder.width/2-ctx.filterBut.width/2)
+    ctx.menuholder.y=ctx.filterBut.y+ctx.filterBut.height
+    ctx.cplayout.pos = ctx.menuholder.pos
+    ctx.menuholder.add_widget(ctx.cplayout)
+    
+    w.add_widget(ctx.menuholder)
+    #ctx.menuholder.hide()
+
+    @ctx.filterBut.event    
+    def on_press(touchID, x, y):
+        ctx.menuholder.show()
+        ctx.menuholder.bring_to_front()
+        
+    @ctx.filterBut.event    
+    def on_release(touchID, x, y):
+        ctx.menuholder.hide()
+
+def pymt_plugin_deactivate(w, ctx):
+    w.remove_widget(ctx.image)
+    w.remove_widget(ctx.cplayout)
+    w.remove_widget(ctx.ctlbl)
+    w.remove_widget(ctx.sl)
+    w.remove_widget(ctx.ctlb2)
+    w.remove_widget(ctx.s2)
+    w.remove_widget(ctx.ctlb3)
+    w.remove_widget(ctx.s3)
+    w.remove_widget(ctx.ctlb4)
+    w.remove_widget(ctx.s4)
+    w.remove_widget(ctx.filterBut)
+    w.remove_widget(ctx.menuholder)
+	
 if __name__ == '__main__':
+    w = MTWindow()
+    ctx = MTContext()
+    pymt_plugin_activate(w, ctx)
+    runTouchApp()
+    pymt_plugin_deactivate(w, ctx)
+
+
+"""if __name__ == '__main__':
     w = MTWindow()
     
     #add the images
@@ -221,3 +311,4 @@ if __name__ == '__main__':
 
     
     runTouchApp()            
+"""

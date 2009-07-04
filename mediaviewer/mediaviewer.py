@@ -8,7 +8,6 @@ PLUGIN_ICON = '../mediaviewer/mediaviewer.png'
 
 from pymt import *
 from pyglet.media import *
-from pymt.ui.widgets.videowidget import *
 import random
 
 

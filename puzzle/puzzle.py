@@ -1,8 +1,8 @@
 # PYMT Plugin integration
-IS_PYMT_PLUGIN = False
-PLUGIN_TITLE = 'Pyzzle a multitouch video puzzle'
-PLUGIN_AUTHOR = 'Sharath Patali'
-PLUGIN_EMAIL = 'sharath.patali@gmail.com'
+IS_PYMT_PLUGIN = True
+PLUGIN_TITLE = 'Video Puzzle'
+PLUGIN_AUTHOR = 'Team'
+PLUGIN_ICON = '../puzzle/puzzle.png'
 
 
 from pymt import *
@@ -67,9 +67,8 @@ class MTSnappableWidget(MTWidget):
                 zero_count+=1
         if zero_count>0:
             return
-        else:
-            self.parent.popup.bring_to_front()
-            self.parent.popup.show()
+        else:            
+            self.parent.player.pause()
             
 class PyzzleEngine(MTWidget):
     def __init__(self, **kwargs):
@@ -78,9 +77,10 @@ class PyzzleEngine(MTWidget):
         self.pieces  = {}
         self.rows = kwargs.get('rows')
         self.cols = kwargs.get('cols')
+        self.win = kwargs.get('win')
         self.player = Player()
         self.player.volume = 0.5
-        self.source = pyglet.media.load('super-fly.avi')
+        self.source = pyglet.media.load('../puzzle/super-fly.avi')
         self.sourceDuration = self.source.duration
         self.player.queue(self.source)
         self.player.eos_action = 'loop'
@@ -90,9 +90,10 @@ class PyzzleEngine(MTWidget):
         puzzle_seq = pyglet.image.ImageGrid(self.player.get_texture(),self.rows,self.cols)
         
         self.griddy = MTSnappableGrid(rows=self.rows,cols=self.cols,spacing=0,block_size=(puzzle_seq[0].width,puzzle_seq[1].height))
-        self.add_widget(self.griddy) 
-        
-        self.griddy.pos = (int(w.width/2-self.griddy._get_content_width()/2),int(w.height/2-self.griddy._get_content_height()/2))
+        self.add_widget(self.griddy)
+
+        self.griddy.pos = (int(self.win.width/2)-300,150)        
+        #self.griddy.pos = (int(self.win.width/2-self.griddy._get_content_width()/2),int(self.win.height/2-self.griddy._get_content_height()/2))
         z = 0
         for i in range(self.griddy.rows):
             for j in range(self.griddy.cols):
@@ -100,22 +101,22 @@ class PyzzleEngine(MTWidget):
                 self.pieces[z].prob_centerX = int(self.griddy.x+self.pieces[z].width*j+self.pieces[z].width/2)
                 self.pieces[z].prob_centerY = int(self.griddy.y+self.pieces[z].height*i+self.pieces[z].height/2)
                 self.pieces[z].puzz_id = z
-                #print self.pieces[z].puzz_id,"(",i,j,"): ",self.pieces[z].prob_centerX,self.pieces[z].prob_centerY
                 self.add_widget(self.pieces[z])
                 puzzle_register[z]=0                
                 z+=1
                 
         #On complete display popup
-        self.popup = MTPopup(title="Message",content="Puzzle Completed",size=(300,300))
-        self.add_widget(self.popup)
-        self.popup.hide()
+        #self.popup = MTPopup(title="Message",content="Puzzle Completed",size=(300,300))
+        #self.add_widget(self.popup)
+        #self.popup.hide()
+
 
 class PyzzleObject(MTSnappableWidget):
     def __init__(self, **kwargs):
         super(PyzzleObject, self).__init__(**kwargs)
         self.image = kwargs.get('image')
-        self.x = int(random.uniform(100, 1000))
-        self.y = int(random.uniform(100, 800))
+        self.x = int(random.uniform(100, 800))
+        self.y = int(random.uniform(100, 600))
         self.width = self.image.width
         self.height = self.image.height
         self.prob_centerX = 0
@@ -127,19 +128,22 @@ class PyzzleObject(MTSnappableWidget):
         glColor4f(1,1,1,1)
         self.image.blit(self.x,self.y,0)
         glPopMatrix()
-       
 
+def pymt_plugin_activate(w, ctx):
+    ctx.pyzzle = PyzzleEngine(rows=3,cols=3,win=w)
+    w.add_widget(ctx.pyzzle)
+
+
+def pymt_plugin_deactivate(w, ctx):
+    w.remove_widget(ctx.pyzzle)
+
+
+#start the application (inits and shows all windows)
 if __name__ == '__main__':
-    w = MTWindow()
-    pyzzle = PyzzleEngine(rows=3,cols=3)
-    w.add_widget(pyzzle)
-    
-    exitbut = MTImageButton(filename="exit.png")
-    exitbut.x = int(w.width-exitbut.width)
-    exitbut.y = int(w.height-exitbut.height)    
-    w.add_widget(exitbut)
-    @exitbut.event    
-    def on_press(touchID, x, y):
-        sys.exit()    
+    w = MTWindow(color=(0,0,0,1))
+    ctx = MTContext()
+    pymt_plugin_activate(w, ctx)
     runTouchApp()
+    pymt_plugin_deactivate(w, ctx)
+
  

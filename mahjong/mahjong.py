@@ -30,7 +30,16 @@ def check(dt):
         tile1 = -1
         tile2 = -1
         
-            
+
+class MTPlaceholder(MTRectangularWidget):
+    def __init__(self, **kwargs):
+        super(MTPlaceholder, self).__init__(**kwargs)
+        self.color = kwargs.get('color')
+    
+    def draw(self):
+        set_color(*self.color)
+        drawCSSRectangle(pos=self.pos, size=self.size, style=self.style)
+        
 class MJEngine(MTWidget):
     def __init__(self, **kwargs):
         super(MJEngine, self).__init__(**kwargs)
@@ -40,25 +49,28 @@ class MJEngine(MTWidget):
         random.shuffle(file_list)
         z = 0
         self.win = kwargs.get('win')
+        self.placeholder = MTPlaceholder(size=(128,128),color=(1,1,1,1))
         for i in range(self.num):
             self.mjobjs[z] = MJObject(size=(128,128))
             self.mjobjs[z].id = i
             self.mjobjs[z].add_widget(MJImage(image=file_list[i]),side="back")           
+            self.mjobjs[z].add_widget(self.placeholder,side="front")
             z+=1
             self.mjobjs[z] = MJObject(size=(128,128))
             self.mjobjs[z].id = i
             self.mjobjs[z].add_widget(MJImage(image=file_list[i]),side="back")
+            self.mjobjs[z].add_widget(self.placeholder,side="front")
             z+=1            
         random.shuffle(self.mjobjs)
         
-        self.griddy = MTGridLayout(rows=6,cols=6,spacing=5)
+        self.griddy = MTGridLayout(rows=4,cols=5,spacing=5)
         self.add_widget(self.griddy)                   
                 
         k = 0
         for i in range(self.num*2):
             self.griddy.add_widget(self.mjobjs[k])
             k+=1  
-        self.griddy.pos = (int(self.win.width/2),int(50))
+        self.griddy.pos = (int(self.win.width/2-350),int(100))
         #self.griddy.pos = (int(self.win.width/2-self.griddy._get_content_width()/2),int(self.win.height/2-self.griddy._get_content_height()/2))
                 
 
@@ -106,12 +118,12 @@ class MJImage(MTWidget):
 
     def draw(self):
         with gx_matrix:
-            glTranslatef(self.x, self.y, 0)
             glColor4f(1,1,1,1)
+            glTranslatef(self.x, self.y, 0)            
             self.image.draw()
 
 def pymt_plugin_activate(root, ctx):
-    ctx.mahjong = MJEngine(num=18,win = root)
+    ctx.mahjong = MJEngine(num=10,win = root)
     root.add_widget(ctx.mahjong)
 
 def pymt_plugin_deactivate(root, ctx):
