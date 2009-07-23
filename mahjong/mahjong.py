@@ -38,7 +38,7 @@ class MTPlaceholder(MTRectangularWidget):
     
     def draw(self):
         set_color(*self.color)
-        drawCSSRectangle(pos=self.pos, size=self.size, style=self.style)
+        drawRectangle(pos=self.pos, size=self.size)
         
 class MJEngine(MTWidget):
     def __init__(self, **kwargs):
@@ -83,9 +83,9 @@ class MJObject(MTFlippableWidget):
         self.id = 0
         self.flipped = False
         
-    def on_touch_down(self, touches, touchID, x,y):
+    def on_touch_down(self, touch):
         global tile_open_count, tile1, tile2,check
-        if self.collide_point(x,y):
+        if self.collide_point(touch.x, touch.y):
             if tile_open_count == 0:
                 self.flip()
                 self.flipped = True
