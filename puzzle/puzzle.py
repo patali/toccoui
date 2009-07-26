@@ -1,8 +1,10 @@
+import os
+
 # PYMT Plugin integration
 IS_PYMT_PLUGIN = True
 PLUGIN_TITLE = 'Video Puzzle'
 PLUGIN_AUTHOR = 'Team'
-PLUGIN_ICON = '../puzzle/puzzle.png'
+PLUGIN_ICON = os.path.join('..', 'puzzle', 'puzzle.png') #'../puzzle/puzzle.png'
 
 
 from pymt import *
@@ -32,20 +34,20 @@ class MTSnappableWidget(MTWidget):
         self.grid = kwargs.get('grid')
         global puzzle_register
         
-    def on_touch_down(self, touches, touchID, x, y):
-        if self.collide_point(x,y):
+    def on_touch_down(self, touch):
+        if self.collide_point(touch.x,touch.y):
             self.bring_to_front()
-            self.state = ('dragging', touchID, x, y)
+            self.state = ('dragging', touch.id, touch.x, touch.y)
             return True
 
-    def on_touch_move(self, touches, touchID, x, y):
-        if self.state[0] == 'dragging' and self.state[1] == touchID:
-            self.x, self.y = (self.x + (x - self.state[2]) , self.y + y - self.state[3])
-            self.state = ('dragging', touchID, x, y)
+    def on_touch_move(self, touch):
+        if self.state[0] == 'dragging' and self.state[1] == touch.id:
+            self.x, self.y = (self.x + (touch.x - self.state[2]) , self.y + touch.y - self.state[3])
+            self.state = ('dragging', touch.id, touch.x, touch.y)
             return True
 
-    def on_touch_up(self, touches, touchID, x, y):
-        if self.state[1] == touchID:
+    def on_touch_up(self, touch):
+        if self.state[1] == touch.id:
             self.state = ('normal', None)
             for i in range(self.grid.rows):
                 for j in range(self.grid.cols):
@@ -80,7 +82,7 @@ class PyzzleEngine(MTWidget):
         self.win = kwargs.get('win')
         self.player = Player()
         self.player.volume = 0.5
-        self.source = pyglet.media.load('../puzzle/super-fly.avi')
+        self.source = pyglet.media.load(os.path.join('..', 'puzzle', 'super-fly.avi')) #'../puzzle/super-fly.avi')
         self.sourceDuration = self.source.duration
         self.player.queue(self.source)
         self.player.eos_action = 'loop'

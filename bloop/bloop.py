@@ -1,10 +1,11 @@
 from __future__ import with_statement
+import os
 
 # PYMT Plugin integration
 IS_PYMT_PLUGIN = True
 PLUGIN_TITLE = 'Bloop The Game'
 PLUGIN_AUTHOR = 'Team'
-PLUGIN_ICON = '../bloop/bloop.png'
+PLUGIN_ICON = os.path.join('..', 'bloop', 'bloop.png') #'../bloop/bloop.png'
 
 from pymt import *
 from pyglet.media import *
@@ -83,8 +84,8 @@ class bloop(MTButton):
         anim = self.add_animation('fadeout','radius', self.width+10, 1.0/60, 1.0)
         anim = self.add_animation('fadeout','alpha', 0.00, 1.0/60, 0.5)
         
-    def on_touch_down(self, touches, touchID, x,y):
-        if self.collide_point(x,y):
+    def on_touch_down(self, touch):
+        if self.collide_point(touch.x,touch.y):
             if self.touched == False:
                 self.parent.bloop_points = self.parent.bloop_points+1
                 self.music.play()

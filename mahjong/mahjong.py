@@ -1,10 +1,11 @@
 from __future__ import with_statement
+import os
 
 # PYMT Plugin integration
 IS_PYMT_PLUGIN = True
 PLUGIN_TITLE = 'Mahjong Game'
 PLUGIN_AUTHOR = 'Team'
-PLUGIN_ICON = '../mahjong/mahjong.png'
+PLUGIN_ICON = os.path.join('..', 'mahjong', 'mahjong.png') #'../mahjong/mahjong.png'
 
 
 from pymt import *
@@ -45,7 +46,7 @@ class MJEngine(MTWidget):
         super(MJEngine, self).__init__(**kwargs)
         self.mjobjs  = {} #list which holds the mahjong objects        
         self.num = kwargs.get('num')
-        file_list = glob.glob('../mahjong/icons/*.png')
+        file_list = glob.glob(os.path.join('..', 'mahjong', 'icons', '*.png')) # '../mahjong/icons/*.png')
         random.shuffle(file_list)
         z = 0
         self.win = kwargs.get('win')
@@ -110,11 +111,11 @@ class MJImage(MTWidget):
     def __init__(self, **kwargs):
         super(MJImage, self).__init__(**kwargs)
         self.img_src = kwargs.get('image')
-        self.img                 = pyglet.image.load(self.img_src)
-        self.image          = pyglet.sprite.Sprite(self.img)        
-        self.image.x        = self.x
-        self.image.y        = self.y
-        self.size           = (self.image.width, self.image.height)
+        self.img = pyglet.image.load(self.img_src)
+        self.image = pyglet.sprite.Sprite(self.img)        
+        self.image.x = self.x
+        self.image.y = self.y
+        self.size = (self.image.width, self.image.height)
 
     def draw(self):
         with gx_matrix:
