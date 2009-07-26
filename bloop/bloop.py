@@ -5,7 +5,7 @@ import os
 IS_PYMT_PLUGIN = True
 PLUGIN_TITLE = 'Bloop The Game'
 PLUGIN_AUTHOR = 'Team'
-PLUGIN_ICON = os.path.join('..', 'bloop', 'bloop.png') #'../bloop/bloop.png'
+PLUGIN_ICON = os.path.join('..', 'bloop', 'bloop.png')
 
 from pymt import *
 from pyglet.media import *

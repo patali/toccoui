@@ -5,7 +5,7 @@ import os
 IS_PYMT_PLUGIN = True
 PLUGIN_TITLE = 'Media Viewer'
 PLUGIN_AUTHOR = 'Team'
-PLUGIN_ICON = os.path.join('..', 'mediaviewer', 'mediaviewer.png') # '../mediaviewer/mediaviewer.png'
+PLUGIN_ICON = os.path.join('..', 'mediaviewer', 'mediaviewer.png')
 
 from pymt import *
 from pyglet.media import *
@@ -16,10 +16,10 @@ class Collection(MTWidget):
     def __init__(self, **kwargs):
         super(Collection, self).__init__(**kwargs)
         self.win = kwargs.get('win')
-        video = MTVideo(video=os.path.join('..', 'mediaviewer', 'super-fly.avi'), pos=(450,400)) #'../mediaviewer/super-fly.avi',pos=(450,400))
+        video = MTVideo(video=os.path.join('..', 'mediaviewer', 'super-fly.avi'), pos=(450,400))
         self.add_widget(video)
         for i in range (5):
-            img_src = os.path.join('..', 'mediaviewer', 'images', 'IMG'+str(i)+'.jpg') #'../mediaviewer/images/IMG'+str(i)+'.jpg'
+            img_src = os.path.join('..', 'mediaviewer', 'images', 'IMG'+str(i)+'.jpg')
             x = int(random.uniform(100, self.win.width-100))
             y = int(random.uniform(100, self.win.height-100))
             rot = random.uniform(0, 360)
@@ -34,7 +34,6 @@ def pymt_plugin_deactivate(w, ctx):
     w.remove_widget(ctx.col)
 
 
-#start the application (inits and shows all windows)
 if __name__ == '__main__':
     w = MTWindow(color=(0,0,0,1))
     ctx = MTContext()

@@ -10,7 +10,7 @@ IS_PYMT_PLUGIN = True
 PLUGIN_TITLE = 'Particles Sandbox'
 PLUGIN_AUTHOR = 'Team'
 PLUGIN_DESCRIPTION = 'All stars are coming under touches!'
-PLUGIN_ICON = os.path.join('..', 'particle', 'particle.png') #'../particle/particle.png'
+PLUGIN_ICON = os.path.join('..', 'particle', 'particle.png')
 
 class ParticleObject(MTWidget):
     def __init__(self, pos=(0,0), size=(20,20), color=(1,1,1),
@@ -67,7 +67,6 @@ class ParticleObject(MTWidget):
             glTranslatef(self.x, self.y, 0)
             glRotated(self.rotation, 0,0,1)
             glScalef(self.zoom, self.zoom, 1)
-            #glTranslatef(-self.size[0]/2, -self.size[1]/2, 0)
             self.draw()
 
     def on_animation_complete(self, anim):
@@ -76,7 +75,6 @@ class ParticleObject(MTWidget):
 class ParticleEngine(MTWidget):
     def __init__(self, max=150, **kargs):
         MTWidget.__init__(self, **kargs)
-        #print 'Particle Engine Initialized'
         self.max        = max
         self.particles  = {}
         for i in range(self.max):
@@ -159,7 +157,7 @@ def pymt_plugin_deactivate(w, ctx):
     w.remove_widget(ctx.pe)
     w.remove_widget(ctx.back)
 
-#start the application (inits and shows all windows)
+
 if __name__ == '__main__':
     w = MTWindow(color=(0,0,0,1))
     ctx = MTContext()

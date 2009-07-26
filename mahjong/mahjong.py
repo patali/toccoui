@@ -5,7 +5,7 @@ import os
 IS_PYMT_PLUGIN = True
 PLUGIN_TITLE = 'Mahjong Game'
 PLUGIN_AUTHOR = 'Team'
-PLUGIN_ICON = os.path.join('..', 'mahjong', 'mahjong.png') #'../mahjong/mahjong.png'
+PLUGIN_ICON = os.path.join('..', 'mahjong', 'mahjong.png')
 
 
 from pymt import *
@@ -46,7 +46,7 @@ class MJEngine(MTWidget):
         super(MJEngine, self).__init__(**kwargs)
         self.mjobjs  = {} #list which holds the mahjong objects        
         self.num = kwargs.get('num')
-        file_list = glob.glob(os.path.join('..', 'mahjong', 'icons', '*.png')) # '../mahjong/icons/*.png')
+        file_list = glob.glob(os.path.join('..', 'mahjong', 'icons', '*.png'))
         random.shuffle(file_list)
         z = 0
         self.win = kwargs.get('win')
@@ -72,7 +72,7 @@ class MJEngine(MTWidget):
             self.griddy.add_widget(self.mjobjs[k])
             k+=1  
         self.griddy.pos = (int(self.win.width/2-350),int(100))
-        #self.griddy.pos = (int(self.win.width/2-self.griddy._get_content_width()/2),int(self.win.height/2-self.griddy._get_content_height()/2))
+
                 
 
 class MJObject(MTFlippableWidget):

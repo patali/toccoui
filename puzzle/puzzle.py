@@ -4,7 +4,7 @@ import os
 IS_PYMT_PLUGIN = True
 PLUGIN_TITLE = 'Video Puzzle'
 PLUGIN_AUTHOR = 'Team'
-PLUGIN_ICON = os.path.join('..', 'puzzle', 'puzzle.png') #'../puzzle/puzzle.png'
+PLUGIN_ICON = os.path.join('..', 'puzzle', 'puzzle.png')
 
 
 from pymt import *
@@ -82,7 +82,7 @@ class PyzzleEngine(MTWidget):
         self.win = kwargs.get('win')
         self.player = Player()
         self.player.volume = 0.5
-        self.source = pyglet.media.load(os.path.join('..', 'puzzle', 'super-fly.avi')) #'../puzzle/super-fly.avi')
+        self.source = pyglet.media.load(os.path.join('..', 'puzzle', 'super-fly.avi'))
         self.sourceDuration = self.source.duration
         self.player.queue(self.source)
         self.player.eos_action = 'loop'
@@ -95,7 +95,6 @@ class PyzzleEngine(MTWidget):
         self.add_widget(self.griddy)
 
         self.griddy.pos = (int(self.win.width/2)-300,150)        
-        #self.griddy.pos = (int(self.win.width/2-self.griddy._get_content_width()/2),int(self.win.height/2-self.griddy._get_content_height()/2))
         z = 0
         for i in range(self.griddy.rows):
             for j in range(self.griddy.cols):
@@ -107,11 +106,6 @@ class PyzzleEngine(MTWidget):
                 puzzle_register[z]=0                
                 z+=1
                 
-        #On complete display popup
-        #self.popup = MTPopup(title="Message",content="Puzzle Completed",size=(300,300))
-        #self.add_widget(self.popup)
-        #self.popup.hide()
-
 
 class PyzzleObject(MTSnappableWidget):
     def __init__(self, **kwargs):
@@ -140,7 +134,6 @@ def pymt_plugin_deactivate(w, ctx):
     w.remove_widget(ctx.pyzzle)
 
 
-#start the application (inits and shows all windows)
 if __name__ == '__main__':
     w = MTWindow(color=(0,0,0,1))
     ctx = MTContext()
