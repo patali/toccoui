@@ -23,48 +23,48 @@ class MTicon(MTButton):
 
         super(MTicon, self).__init__(**kwargs)
         self.fname = kwargs.get('filename')
-        img                 = pyglet.image.load(kwargs.get('filename'))
-        self.image          = pyglet.sprite.Sprite(img)
-        self.image.x        = self.x
-        self.image.y        = self.y
-        self.scale          = kwargs.get('scale')
-        self.image.scale    = self.scale
-        self.width,self.height  = (self.image.width, self.image.height)
+        img = pyglet.image.load(kwargs.get('filename'))
+        self.image = pyglet.sprite.Sprite(img)
+        self.image.x = self.x
+        self.image.y = self.y
+        self.scale = kwargs.get('scale')
+        self.image.scale = self.scale
+        self.width,self.height = (self.image.width, self.image.height)
         self.texture = img.get_texture()
 
     def draw(self):
-        self.image.x        = self.x
-        self.image.y        = self.y       
-        self.size           = (self.image.width, self.image.height)
-        #
+        self.image.x = self.x
+        self.image.y = self.y       
+        self.size = (self.image.width, self.image.height)
+        
         with DO(gx_blending, gx_enable(GL_TEXTURE_2D)):
             set_color(1, 1, 1, 1)
             drawCover(self.texture.id, pos=(self.x,self.y + 50), size=(self.image.width,self.image.height))
         self.parent.do_layout()
 
-    def on_touch_down(self, touches, touchID, x, y):
-        if self.collide_point(x,y):
+    def on_touch_down(self, touch):
+        if self.collide_point(touch.x,touch.y):
             print "Touched"
             print "file: ",self.fname , self.parent.parent.to_parent(self.x,self.y)[0]
             return
 
-    def on_touch_move(self, touches, touchID, x, y):
+    def on_touch_move(self, touch):
         return
 
-    def on_touch_up(self, touches, touchID, x, y):
-        if self.collide_point(x,y):
+    def on_touch_up(self, touch):
+        if self.collide_point(touch.x,touch.y):
             return
 
     def on_draw(self):
         if (self.parent.parent.to_parent(self.x,self.y)[0] >= (w.width/2-256)) & (self.parent.parent.to_parent(self.x,self.y)[0] <= (w.width/2)):
             self.y -= 50
             if self.image.scale < 1.0:
-                self.image.scale    = self.image.scale+math.sin(math.pi / 2 * 0.06)
-            self.width,self.height  = (self.image.width, self.image.height)
+                self.image.scale = self.image.scale+math.sin(math.pi / 2 * 0.06)
+            self.width,self.height = (self.image.width, self.image.height)
         else:
             if self.image.scale > 0.5:
-                self.image.scale    = self.image.scale-math.sin(math.pi / 2 * 0.06)
-            self.width,self.height  = (self.image.width, self.image.height)
+                self.image.scale = self.image.scale-math.sin(math.pi / 2 * 0.06)
+            self.width,self.height = (self.image.width, self.image.height)
         self.draw()
 
 def drawCover(texture, pos=(0,0), size=(1.0,1.0)):
@@ -88,22 +88,22 @@ class slideShow(MTWidget):
 
         super(slideShow, self).__init__(**kwargs)
         self.fname = kwargs.get('filename')
-        img                 = pyglet.image.load(kwargs.get('filename'))
-        self.image          = pyglet.sprite.Sprite(img)
-        self.image.x        = self.x
-        self.image.y        = self.y
-        self.scale          = kwargs.get('scale')
-        self.image.scale    = self.scale
-        self.width,self.height  = (self.image.width, self.image.height)
+        img = pyglet.image.load(kwargs.get('filename'))
+        self.image = pyglet.sprite.Sprite(img)
+        self.image.x = self.x
+        self.image.y = self.y
+        self.scale = kwargs.get('scale')
+        self.image.scale = self.scale
+        self.width,self.height = (self.image.width, self.image.height)
         self.texture = img.get_texture()
         self.rotation = 45        
 
     def draw(self):
         global angle
-        self.image.x        = self.x
-        self.image.y        = self.y
-        self.size           = (self.image.width, self.image.height)
-        #
+        self.image.x = self.x
+        self.image.y = self.y
+        self.size = (self.image.width, self.image.height)
+        
         with DO(gx_enable(GL_BLEND),gx_enable(GL_TEXTURE_2D)):
             glColor4f(1, 1, 1, 1)
             glPushMatrix()
@@ -115,16 +115,16 @@ class slideShow(MTWidget):
             glPopMatrix()
         
 
-    def on_touch_down(self, touches, touchID, x, y):
-        if self.collide_point(x,y):
+    def on_touch_down(self, touch):
+        if self.collide_point(touch.x,touch.y):
             print "Touched"
             return
 
-    def on_touch_move(self, touches, touchID, x, y):
+    def on_touch_move(self, touch):
         return
 
-    def on_touch_up(self, touches, touchID, x, y):
-        if self.collide_point(x,y):
+    def on_touch_up(self, touch):
+        if self.collide_point(touch.x,touch.y):
             return
 
     def on_draw(self):
