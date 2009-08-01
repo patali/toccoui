@@ -152,12 +152,12 @@ def drawCover(texture, pos=(0,0), size=(1.0,1.0)):
         
         # Draw First Cover
         pos = ( pos[0],pos[1],   pos[0]+size[0],pos[1],   pos[0]+size[0],pos[1]+size[1],  pos[0],pos[1]+size[1] )
-        texcoords = (0.0,0.0, 1.0,0.0, 1.0,1.0, 0.0,1.0)
+        texcoords = (0.0,0.0, 0.90,0.0, 0.9,0.9, 0.0,0.9)
         draw(4, GL_QUADS, ('v2f', pos), ('t2f', texcoords))
         
         # Draw Second Cover
         pos2 = ( pos[0],pos[1]-size[1],   pos[0]+size[0],pos[1]-size[1],   pos[0]+size[0],pos[1]+size[1]-size[1],  pos[0],pos[1]+size[1]-size[1] )
-        texcoords2 = (0.0,1.0, 1.0,1.0, 1.0,0.0, 0.0,0.0)
+        texcoords2 = (0.0,0.9, 0.9,0.9, 0.9,0.0, 0.0,0.0)
         color2 = (0,0,0,0, 0,0,0,0, 0.4,0.4,0.4,0, 0.4,0.4,0.4,0 )
         draw(4, GL_QUADS, ('v2f', pos2), ('t2f', texcoords2), ('c4f', color2))
 
